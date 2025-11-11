@@ -175,10 +175,10 @@ document.addEventListener('DOMContentLoaded', function() {
         updateDisplay("Welcome back!");
     }
 
-    // --- Logging ---
     function logEvent(eventType, details = {}) {
         const logs = JSON.parse(localStorage.getItem('logs') || '[]');
-        logs.push({ eventType, timestamp: new Date().toISOString(), ...details });
+        const group = localStorage.getItem('experimentGroup') || 'unknown'; // get the chosen group
+        logs.push({ eventType, timestamp: new Date().toISOString(), group, ...details });
         localStorage.setItem('logs', JSON.stringify(logs));
     }
 

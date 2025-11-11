@@ -79,11 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     }
 
-    function logEvent(type, details = {}) {
+    function logEvent(eventType, details = {}) {
         const logs = JSON.parse(localStorage.getItem('logs') || '[]');
-        logs.push({ type, timestamp: new Date().toISOString(), ...details });
+        const group = localStorage.getItem('experimentGroup') || 'unknown'; // Add group
+        logs.push({ eventType, group, timestamp: new Date().toISOString(), ...details });
         localStorage.setItem('logs', JSON.stringify(logs));
-    }
+    }   
 
     function downloadData() {
         const logs = JSON.parse(localStorage.getItem('logs') || '[]');
