@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1>Your Progress</h1>
+
+        <div class="progress-box">
+            <div id="petFace" style="font-size: 4rem;">:/</div>
+            <p id="moodText">Let's see how you're doing!</p>
+            <hr>
+            <p id="pointsDisplay">Points: 0</p>
+            <p id="streakDisplay">Streak: 0 days</p>
+        </div>
+    </div>
+    <br>
+    <button onclick="window.location.href='index.html'">Back to Home</button>
+    <button onclick="resetProgress()">Reset Progress</button>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const points = parseInt(localStorage.getItem('points')) || 0;
+        const streak = parseInt(localStorage.getItem('streak')) || 0;
+
+        document.getElementById('pointsDisplay').textContent = "Points: " + points;
+        document.getElementById('streakDisplay').textContent = "Streak: " + streak + " days";
+
+        const petFace = document.getElementById('petFace');
+        const moodText = document.getElementById('moodText');
+
+        if (streak >= 5) {
+            petFace.textContent = "😄";
+            moodText.textContent = "You're unstoppable!";
+        } else if (streak >= 1) {
+            petFace.textContent = ":)";
+            moodText.textContent = "Nice streak! Keep it going!";
+        } else if (points > 0) {
+            petFace.textContent = ":|";
+            moodText.textContent = "You’ve done some work, let's do more!";
+        } else {
+            petFace.textContent = ":/";
+            moodText.textContent = "Let’s start your first task!";
+        }
+    });
+
+    function resetProgress() {
+        // Clear tasks and streak
+        localStorage.removeItem('tasks');
+        localStorage.setItem('streak', 0);
+        localStorage.setItem('lastCompletionDate', '');
+
+        // Keep points at 50 and health at 100
+        localStorage.setItem('points', 50);
+        localStorage.setItem('health', 100);
+
+        document.getElementById('pointsDisplay').textContent = "Points: 50";
+        document.getElementById('streakDisplay').textContent = "Streak: 0 days";
+        document.getElementById('petFace').textContent = "😄";
+        document.getElementById('moodText').textContent = "Your companion is healthy and ready!";
+        alert("Progress has been reset! Points are set to 50 and health to 100.");
+    }
+    </script>
+
+
+</body>
+</html>

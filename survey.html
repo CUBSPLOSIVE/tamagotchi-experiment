@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Post-Study Survey</title>
+</head>
+<body>
+  <h2>Post-Study Questionnaire</h2>
+  <form id="surveyForm">
+    <p>1. I felt motivated to complete tasks.</p>
+    <label><input type="radio" name="motivation" value="1">1</label>
+    <label><input type="radio" name="motivation" value="2">2</label>
+    <label><input type="radio" name="motivation" value="3">3</label>
+    <label><input type="radio" name="motivation" value="4">4</label>
+    <label><input type="radio" name="motivation" value="5">5</label>
+
+    <p>2. I enjoyed using this task tracker.</p>
+    <label><input type="radio" name="enjoyment" value="1">1</label>
+    <label><input type="radio" name="enjoyment" value="2">2</label>
+    <label><input type="radio" name="enjoyment" value="3">3</label>
+    <label><input type="radio" name="enjoyment" value="4">4</label>
+    <label><input type="radio" name="enjoyment" value="5">5</label>
+
+    <p>3. The system was easy to use.</p>
+    <label><input type="radio" name="ease" value="1">1</label>
+    <label><input type="radio" name="ease" value="2">2</label>
+    <label><input type="radio" name="ease" value="3">3</label>
+    <label><input type="radio" name="ease" value="4">4</label>
+    <label><input type="radio" name="ease" value="5">5</label>
+
+    <br><br>
+    <button type="button" onclick="downloadSurvey()">Download Responses</button>
+  </form>
+
+  <script>
+    function downloadSurvey() {
+      const formData = new FormData(document.getElementById('surveyForm'));
+      const data = {};
+      formData.forEach((v, k) => data[k] = v);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'survey_responses.json';
+      a.click();
+    }
+  </script>
+</body>
+</html>
