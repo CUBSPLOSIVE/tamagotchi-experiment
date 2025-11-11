@@ -3,39 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamagotchi Prototype</title>
+    <title>Experiment Entry</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <div class="top-bar">
-        <h1>Tamagotchi Task Tracker</h1>
-    </div>
-
     <div class="main-container">
-        <div id="home" class="screen">
-            <div class="task">
-                <h2>Task List</h2>
-                <ul id="taskList"></ul>
-                <input id="taskInput" placeholder="New Task">
-                <input type="datetime-local" id="taskDeadline">
-                <button onclick="addTask()">Add Task</button>
-                <br><br>
-                <button onclick="window.location.href='progress.html'">View Progress</button>
-                <button onclick="downloadData()">Download Data</button>
-                <button onclick="resetLogs()">Reset Logs</button>
-            </div>
-
-            <div class="companion">
-                <h2>Your Companion</h2>
-                <div id="petContainer">
-                    <img id="petImage" src="assets/Raised Eyebrow Emoji.gif" alt="Your Companion" width="120">
-                </div>
-                <p id="companionStatus">Complete tasks to keep me happy!</p>
-            </div>
-        </div>
+        <h1>Welcome to the Task Experiment!</h1>
+        <p>Please select your group:</p>
+        <button onclick="assignGroup('gamified')">Gamified Group</button>
+        <button onclick="assignGroup('control')">Control Group</button>
     </div>
 
-    <script src="script.js" defer></script>
+    <script>
+        function assignGroup(group) {
+            // Store the group assignment in localStorage
+            localStorage.setItem('experimentGroup', group);
+
+            // Redirect to the appropriate page
+            if(group === 'gamified') {
+                window.location.href = 'experiment.html';   // your gamified page
+            } else {
+                window.location.href = 'experiment_control.html'; // your control page
+            }
+        }
+    </script>
 </body>
 </html>

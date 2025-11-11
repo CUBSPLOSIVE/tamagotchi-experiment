@@ -187,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tasks.forEach((task, index) => {
             if (task.deadline) {
                 const diff = task.deadline - Date.now();
+                const timerEl = document.getElementById(`timer-${index}`);
                 if (diff <= 0) {
                     logEvent('task_deadline_reached', {
                         task: task.text,
@@ -195,10 +196,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         remainingTasks: tasks.length
                     });
                     failTask(index);
+                    return;
+                }
+                if (timerEl) {
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    timerEl.textContent = `Time left: ${hours}h ${minutes}m`;
                 }
             }
         });
     }, 1000);
+
 
     window.addTask = addTask;
     loadProgress();

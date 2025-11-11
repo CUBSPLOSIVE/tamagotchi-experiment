@@ -1,11 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     let tasks = [];
 
+    // --- Add new task ---
     function addTask() {
         const input = document.getElementById('taskInput').value.trim();
         const deadlineInput = document.getElementById('taskDeadline').value;
 
         if (!input) return alert("Enter a task.");
+
         let deadline = null;
         if (deadlineInput) {
             const parsed = new Date(deadlineInput);
@@ -22,14 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     }
 
+    // --- Render tasks ---
     function renderTasks() {
         const list = document.getElementById('taskList');
         list.innerHTML = '';
 
         tasks.forEach((task, index) => {
             const li = document.createElement('li');
-            li.textContent = task.text;
 
+            // Task text
+            const taskSpan = document.createElement('span');
+            taskSpan.textContent = task.text;
+            li.appendChild(taskSpan);
+
+            // Timer span
             if (task.deadline) {
                 const timerEl = document.createElement('span');
                 timerEl.id = `timer-${index}`;
@@ -37,20 +45,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.appendChild(timerEl);
             }
 
+            // Buttons container
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'task-buttons';
+
             const completeBtn = document.createElement('button');
             completeBtn.textContent = 'Complete';
             completeBtn.onclick = () => completeTask(index);
-            li.appendChild(completeBtn);
 
             const failBtn = document.createElement('button');
             failBtn.textContent = 'Fail';
             failBtn.onclick = () => failTask(index);
-            li.appendChild(failBtn);
+
+            btnContainer.appendChild(completeBtn);
+            btnContainer.appendChild(failBtn);
+            li.appendChild(btnContainer);
 
             list.appendChild(li);
         });
     }
 
+    // --- Complete task ---
     function completeTask(index) {
         const task = tasks[index];
         tasks.splice(index, 1);
@@ -60,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     }
 
+    // --- Fail task ---
     function failTask(index) {
         const task = tasks[index];
         tasks.splice(index, 1);
@@ -69,9 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     }
 
+    // --- Save/load data ---
     function saveData() {
         localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.setItem('logs', JSON.stringify(JSON.parse(localStorage.getItem('logs') || '[]')));
+        const logs = JSON.parse(localStorage.getItem('logs') || '[]');
+        localStorage.setItem('logs', JSON.stringify(logs));
     }
 
     function loadData() {
@@ -79,16 +97,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTasks();
     }
 
+    // --- Logging ---
     function logEvent(eventType, details = {}) {
         const logs = JSON.parse(localStorage.getItem('logs') || '[]');
-        const group = localStorage.getItem('experimentGroup') || 'unknown'; // Add group
+        const group = localStorage.getItem('experimentGroup') || 'unknown';
         logs.push({ eventType, group, timestamp: new Date().toISOString(), ...details });
         localStorage.setItem('logs', JSON.stringify(logs));
-    }   
+    }
 
+    // --- Download logs as JSON ---
     function downloadData() {
         const logs = JSON.parse(localStorage.getItem('logs') || '[]');
-        const data = JSON.stringify(logs, null, 2); // Pretty-print with 2 spaces
+        const data = JSON.stringify(logs, null, 2); // pretty-print
         const blob = new Blob([data], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -96,27 +116,38 @@ document.addEventListener('DOMContentLoaded', () => {
         a.click();
     }
 
-
+    // --- Reset logs ---
     function resetLogs() {
         localStorage.setItem('logs', '[]');
         alert('Experiment logs cleared!');
     }
-    window.resetLogs = resetLogs;
 
     // --- Global timer updater ---
     setInterval(() => {
         tasks.forEach((task, index) => {
             if (task.deadline) {
                 const diff = task.deadline - Date.now();
+                const timerEl = document.getElementById(`timer-${index}`);
+
                 if (diff <= 0) {
                     logEvent('task_deadline_reached', { task: task.text, remainingTasks: tasks.length });
                     failTask(index);
+                    return;
+                }
+
+                if (timerEl) {
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    timerEl.textContent = `Time left: ${hours}h ${minutes}m`;
                 }
             }
         });
     }, 1000);
 
+    // --- Expose functions globally ---
     window.addTask = addTask;
     window.downloadData = downloadData;
+    window.resetLogs = resetLogs;
+
     loadData();
 });
