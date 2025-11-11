@@ -165,10 +165,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadProgress() {
         tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        points = parseInt(localStorage.getItem('points')) || 0;
+        points = parseInt(localStorage.getItem('points')) || 50;
         streak = parseInt(localStorage.getItem('streak')) || 0;
         lastCompletionDate = localStorage.getItem('lastCompletionDate') || null;
-        health = parseInt(localStorage.getItem('health')) || 50;
+        health = parseInt(localStorage.getItem('health')) || 100;
 
         renderTasks();
         updateMood();
