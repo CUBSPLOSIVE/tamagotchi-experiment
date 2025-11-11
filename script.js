@@ -165,15 +165,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadProgress() {
         tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        points = parseInt(localStorage.getItem('points')) || 50;
+    
+        const storedPoints = localStorage.getItem('points');
+        points = storedPoints !== null ? parseInt(storedPoints) : 50;
+    
+        const storedHealth = localStorage.getItem('health');
+        health = storedHealth !== null ? parseInt(storedHealth) : 100;
+
         streak = parseInt(localStorage.getItem('streak')) || 0;
         lastCompletionDate = localStorage.getItem('lastCompletionDate') || null;
-        health = parseInt(localStorage.getItem('health')) || 100;
 
         renderTasks();
         updateMood();
         updateDisplay("Welcome back!");
     }
+
 
     function logEvent(eventType, details = {}) {
         const logs = JSON.parse(localStorage.getItem('logs') || '[]');
